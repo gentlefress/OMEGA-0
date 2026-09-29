@@ -21,9 +21,9 @@
   <a href="https://gentlefress.github.io/">Zhe Li</a><sup>1,3*†</sup> · 
   Zhenzhe Zhang</a><sup>2,3*</sup> · 
   <a href="https://scholar.google.com/citations?user=2K641iEAAAAJ&hl=zh-CN">Yangyang Wei</a><sup>3*</sup> · 
-  Wenjie Zhang</a><sup>4*</sup> · 
-  Xichen Yuan</a><sup>1*</sup><br>
-  Peiyuan Zhi</a><sup>3</sup> · 
+  <a href="https://scholar.google.com/citations?user=KIMeOUYAAAAJ&hl=zh-CN">Wenjie Zhang</a><sup>4*</sup> · 
+  <a href="https://scholar.google.com/citations?user=9l3KO-YAAAAJ&hl=en&oi=ao">Xichen Yuan</a><sup>1*</sup><br>
+  <a href="https://scholar.google.com/citations?user=p1JGJNwAAAAJ&hl=en">Peiyuan Zhi</a><sup>3</sup> · 
   <a href="https://www.genli.top/">Gen Li</a><sup>1</sup> · 
   <a href="https://scholar.google.com/citations?user=KWXEabIAAAAJ&hl=en">Xinying Guo</a><sup>1</sup> · 
   Fengjie Gao</a><sup>1</sup> · 
