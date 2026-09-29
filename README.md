@@ -14,12 +14,8 @@
 </p>
 
 <p align="center">
-  Zhe Li<sup>1,3*†</sup> · Zhenzhe Zhang<sup>2,3*</sup> · Yangyang Wei<sup>3*</sup> · Wenjie Zhang<sup>4*</sup> · Xichen Yuan<sup>1*</sup><br>
-  Peiyuan Zhi<sup>3</sup> · Gen Li<sup>1</sup> · Xinying Guo<sup>1</sup> · Fengjie Gao<sup>1</sup> · Jianfei Yang<sup>1♣</sup> · Shanghang Zhang<sup>2♣</sup>
-</p>
-<p align="center">
   <a href="https://gentlefress.github.io/">Zhe Li</a><sup>1,3*†</sup> · 
-  Zhenzhe Zhang</a><sup>2,3*</sup> · 
+  <a href="https://scholar.google.com/citations?user=G9y3GWwAAAAJ&hl=zh-CN">Zhenzhe Zhang</a><sup>2,3*</sup> · 
   <a href="https://scholar.google.com/citations?user=2K641iEAAAAJ&hl=zh-CN">Yangyang Wei</a><sup>3*</sup> · 
   <a href="https://scholar.google.com/citations?user=KIMeOUYAAAAJ&hl=zh-CN">Wenjie Zhang</a><sup>4*</sup> · 
   <a href="https://scholar.google.com/citations?user=9l3KO-YAAAAJ&hl=en&oi=ao">Xichen Yuan</a><sup>1*</sup><br>
