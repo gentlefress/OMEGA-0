@@ -19,8 +19,8 @@
 </p>
 
 <p align="center">
-  <sup>1</sup> MARS Lab, Nanyang Technological University (NTU)<br>
-  <sup>2</sup> Peking University · <sup>3</sup> Beijing Academy of Artificial Intelligence (BAAI)<br>
+  <sup>1</sup> MARS Lab, Nanyang Technological University<br>
+  <sup>2</sup> Peking University · <sup>3</sup> Beijing Academy of Artificial Intelligence<br>
   <sup>4</sup> The Hong Kong University of Science and Technology (Guangzhou)<br>
   <strong>*</strong> Equal contribution · <strong>†</strong> Project lead · <strong>♣</strong> Corresponding authors
 </p>
