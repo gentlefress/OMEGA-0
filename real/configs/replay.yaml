@@ -1,0 +1,70 @@
+# Saved observations -> Omega inference -> Sonic commands -> local recording.
+events:
+- {on: q, sources: [lifecycle], action: estop}
+modules:
+- id: replay
+  type: omega_real.recording.replay.Replay
+  events:
+  - {on: enter, sources: [lifecycle], action: start}
+  rate_hz: 100
+  options:
+    episode: ${REPLAY_EPISODE_PATH}
+    speed: 1.0
+    allow_incomplete: false
+- id: lifecycle
+  type: omega_real.policies.lifecycle.Lifecycle
+  rate_hz: 20
+- id: model
+  type: omega_real.models.omega.OmegaInferenceClient
+  events:
+  - {on: p, sources: [lifecycle], action: model_toggle_pause}
+  rate_hz: 100
+  inputs:
+    image: replay.ego
+    state.lowstate: replay.state.rt_lowstate
+    state.left_hand: replay.state.inspire_left_state
+    state.right_hand: replay.state.inspire_right_state
+  outputs:
+    chunk.action: model.chunk.action
+    reference.action: model.reference.action
+    command.token_state: model.command.token_state
+    command.frame_index: model.command.frame_index
+    command.left_trigger: model.command.left_trigger
+    command.right_trigger: model.command.right_trigger
+  options:
+    endpoint: ${INFERENCE_ENDPOINT}
+    hand_state_scale: 0.001
+    view: ego
+    preprocessing:
+      image:
+        # Select the left eye of the original 1280x360 stereo recording.
+        crop: [0, 0, 640, 360]
+    observation:
+      anchor: image
+      max_age_ms: 200
+      instruction: ${INSTRUCTION}
+    inference_interval: 8
+    inference_delay: 8
+    scheduling: rtc
+    overlap: 9
+    max_response_age_ms: 5000
+    timeout_seconds: 5
+- id: sonic
+  type: omega_real.policies.sonic.SonicCommandAdapter
+  rate_hz: 100
+  inputs:
+    command.left_trigger: model.command.left_trigger
+    command.right_trigger: model.command.right_trigger
+  outputs:
+    command.left_hand_joints: command.wire.left_hand_joints
+    command.right_hand_joints: command.wire.right_hand_joints
+  options:
+    hands:
+      left:
+        open: [1., 1., 1., 1., 1., 1.]
+        closed: [0., 0., 0., 0., 0., 0.]
+        fixed: {"5": 0.0}
+      right:
+        open: [1., 1., 1., 1., 1., 1.]
+        closed: [0., 0., 0., 0., 0., 0.]
+        fixed: {"5": 0.0}

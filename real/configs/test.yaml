@@ -1,0 +1,178 @@
+# Local trained-model replay into MuJoCo; DDS and ZMQ use loopback only.
+# Record numeric diagnostics; source camera frames remain in the input episode.
+events:
+- {on: q, sources: [lifecycle], action: estop}
+modules:
+- id: replay
+  type: omega_real.recording.replay.Replay
+  events:
+  - {on: started, sources: [lifecycle], action: start}
+  rate_hz: 100
+  options:
+    episode: /home/baai/collected_data_latent/clean_bed/episode_0000_20260530_221216
+    speed: 1.0
+    allow_incomplete: false
+- id: visualizer
+  type: omega_real.visualizer.RgbVisualizer
+  rate_hz: 30
+  inputs:
+    rgb: replay.ego
+  options:
+    application_id: omega-replay
+    entity_path: inputs/ego
+    mode: spawn
+- id: lifecycle
+  type: omega_real.policies.lifecycle.Lifecycle
+  rate_hz: 50
+  outputs:
+    command.start: lifecycle.command.start
+    command.stop: lifecycle.command.stop
+    command.planner: lifecycle.command.planner
+    enabled: lifecycle.enabled
+  options:
+    planner_seconds: 4
+    stop_on_exit: false
+- id: model
+  type: omega_real.models.omega.OmegaInferenceClient
+  events:
+  - {on: started, sources: [lifecycle], action: restart}
+  - {on: p, sources: [lifecycle], action: model_toggle_pause}
+  rate_hz: 100
+  inputs:
+    image: replay.ego
+    state.lowstate: replay.state.rt_lowstate
+    state.left_hand: replay.state.inspire_left_state
+    state.right_hand: replay.state.inspire_right_state
+    enabled: lifecycle.enabled
+  outputs:
+    chunk.action: model.chunk.action
+    reference.action: model.reference.action
+    command.token_state: model.command.token_state
+    command.frame_index: model.command.frame_index
+    command.left_trigger: model.command.left_trigger
+    command.right_trigger: model.command.right_trigger
+  options:
+    endpoint: http://127.0.0.1:8014
+    hand_state_scale: 0.001
+    view: ego
+    preprocessing:
+      image:
+        crop:
+        - 0
+        - 0
+        - 640
+        - 360
+    observation:
+      anchor: image
+      max_age_ms: 200
+      instruction: clean the bed
+    inference_interval: 8
+    inference_delay: 8
+    scheduling: rtc
+    overlap: 9
+    max_response_age_ms: 5000
+    timeout_seconds: 5
+- id: sonic
+  type: omega_real.policies.sonic.SonicCommandAdapter
+  rate_hz: 100
+  inputs:
+    command.left_trigger: model.command.left_trigger
+    command.right_trigger: model.command.right_trigger
+  outputs:
+    command.left_hand_joints: command.wire.left_hand_joints
+    command.right_hand_joints: command.wire.right_hand_joints
+  options:
+    hands:
+      left:
+        open:
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        closed:
+        - 0
+        - 0
+        - 0.3
+        - 0.3
+        - 0.3
+        - 0.3
+        - 0.3
+      right:
+        open:
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        closed:
+        - 0
+        - 0
+        - 0.3
+        - 0.3
+        - 0.3
+        - 0.3
+        - 0.3
+- id: sender
+  type: omega_real.transports.zmq.ZmqSender
+  inputs:
+    pose.token_state: model.command.token_state
+    pose.frame_index: model.command.frame_index
+    pose.left_hand_joints: command.wire.left_hand_joints
+    pose.right_hand_joints: command.wire.right_hand_joints
+    command.start: lifecycle.command.start
+    command.stop: lifecycle.command.stop
+    command.planner: lifecycle.command.planner
+  options:
+    endpoint: tcp://127.0.0.1:5556
+    bind: true
+    format: sonic_json
+    topics:
+      pose:
+        version: 4
+      command:
+        version: 1
+  rate_hz: 100
+  outputs:
+    sent.pose.token_state: command.sent.token_state
+    sent.pose.frame_index: command.sent.frame_index
+    sent.pose.left_hand_joints: command.sent.left_hand_joints
+    sent.pose.right_hand_joints: command.sent.right_hand_joints
+- id: telemetry
+  type: omega_real.transports.zmq.ZmqReceiver
+  rate_hz: 100
+  options:
+    endpoint: tcp://127.0.0.1:5557
+    topic: g1_debug
+    format: sonic_telemetry
+    disconnect_ms: 5000
+- id: recorder
+  type: omega_real.recording.recorder.Recorder
+  events:
+  - {on: c, sources: [lifecycle], action: record_toggle}
+  - {on: s, sources: [lifecycle], action: record_stop}
+  - {on: x, sources: [lifecycle], action: record_abort}
+  - {on: f, sources: [lifecycle], action: record_abort}
+  rate_hz: 100
+  inputs:
+    prediction: model.chunk.action
+    token: command.sent.token_state
+    frame: command.sent.frame_index
+    body_q: g1_debug.body_q
+    target: g1_debug.body_q_target
+    observed_token: g1_debug.token_state
+    left_hand: g1_debug.left_hand_q
+    right_hand: g1_debug.right_hand_q
+  options:
+    root: artifacts/replay_sim/episodes
+    format: tensor
+    sampling: all
+    metadata:
+      source_episode: /home/baai/collected_data_latent/clean_bed/episode_0000_20260530_221216
+      checkpoint: /home/baai/wam_ckpt/wan_ego_60000
+      simulator: true
+  queue_size: 4096

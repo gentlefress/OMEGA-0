@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.egg-info/
+build/
+dist/
+artifacts/
+tests/
+
+# Keep README files; ignore other Markdown documentation.
+*.md
+!README.md
+MANIFEST.in
+
+# Local C++ runtime; gear_sonic_deploy is the published backend.
+/deploy/

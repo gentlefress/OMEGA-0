@@ -1,0 +1,7 @@
+host: 127.0.0.1
+port: 8014
+request_timeout: 30
+model:
+  checkpoint: /path/to/ckpt
+  external_models: /path/to/t5&wan/ckpt
+  device: cuda

@@ -1,0 +1,293 @@
+events:
+- {on: q, sources: [lifecycle], action: estop}
+- {on: stopped, sources: [lifecycle], action: estop}
+- {on: stopped, sources: [lifecycle], action: shutdown}
+modules:
+- id: xr
+  type: omega_real.sensors.xr.XRSource
+  rate_hz: 500
+  outputs:
+    body: operator.body
+    triggers: operator.triggers
+    controls.buttons: operator.controls.buttons
+    controls.grips: operator.controls.grips
+    controls.axes: operator.controls.axes
+    controls.menus: operator.controls.menus
+    controls.clicks: operator.controls.clicks
+    controls.tracking: operator.controls.tracking
+    timing.dt: operator.timing.dt
+    timing.fps: operator.timing.fps
+    timing.realtime: operator.timing.realtime
+    timing.monotonic: operator.timing.monotonic
+- id: telemetry
+  type: omega_real.transports.zmq.ZmqReceiver
+  rate_hz: 100
+  options:
+    endpoint: ${TELEMETRY_ENDPOINT}
+    topic: g1_debug
+    format: sonic_telemetry
+- id: camera
+  type: omega_real.sensors.camera.JpegZmqCamera
+  rate_hz: 30
+  outputs:
+    rgb: camera.rgb
+  options:
+    endpoint: tcp://${CAMERA_HOST}:5555
+    service:
+      host: ${CAMERA_HOST}
+      port: 13579
+    size:
+    - 1280
+    - 360
+# Optional exo-centric camera
+- id: exocentric_camera
+  type: omega_real.sensors.camera.ZedCamera
+  rate_hz: 30
+  outputs:
+    rgb: camera.exo_rgb
+    depth: camera.exo_depth
+  options:
+    resolution: HD720
+    fps: 30
+    size:
+    - 640
+    - 360
+- id: lifecycle
+  type: omega_real.policies.lifecycle.Lifecycle
+  inputs:
+    body: operator.body
+    triggers: operator.triggers
+    controls.buttons: operator.controls.buttons
+    controls.grips: operator.controls.grips
+    controls.axes: operator.controls.axes
+    controls.menus: operator.controls.menus
+    controls.clicks: operator.controls.clicks
+    controls.tracking: operator.controls.tracking
+  outputs:
+    command.start: lifecycle.command.start
+    command.stop: lifecycle.command.stop
+    command.planner: lifecycle.command.planner
+    mode.value: lifecycle.mode.value
+    mode.heading: lifecycle.mode.heading
+    mode.heading_increment: lifecycle.mode.heading_increment
+    mode.toggle_record: lifecycle.mode.toggle_record
+    mode.abort_record: lifecycle.mode.abort_record
+- id: sonic
+  type: omega_real.policies.sonic.SonicCommandAdapter
+  events:
+  - {on: sonic_mode, sources: [lifecycle], action: sonic_mode}
+  - {on: calibrate, sources: [lifecycle], action: calibrate}
+  inputs:
+    mode.value: lifecycle.mode.value
+    mode.heading: lifecycle.mode.heading
+    mode.heading_increment: lifecycle.mode.heading_increment
+    mode.toggle_record: lifecycle.mode.toggle_record
+    mode.abort_record: lifecycle.mode.abort_record
+    body: operator.body
+    triggers: operator.triggers
+    controls.buttons: operator.controls.buttons
+    controls.grips: operator.controls.grips
+    controls.axes: operator.controls.axes
+    controls.menus: operator.controls.menus
+    controls.clicks: operator.controls.clicks
+    controls.tracking: operator.controls.tracking
+    timing.dt: operator.timing.dt
+    timing.fps: operator.timing.fps
+    timing.realtime: operator.timing.realtime
+    timing.monotonic: operator.timing.monotonic
+    joints: g1_debug.body_q
+    left_hand: g1_debug.left_hand_q
+    right_hand: g1_debug.right_hand_q
+  outputs:
+    planner.mode: controller.planner.mode
+    planner.movement: controller.planner.movement
+    planner.facing: controller.planner.facing
+    planner.speed: controller.planner.speed
+    planner.height: controller.planner.height
+    planner.upper_body_position: controller.planner.upper_body_position
+    planner.vr_position: controller.planner.vr_position
+    planner.vr_orientation: controller.planner.vr_orientation
+    planner.left_hand_joints: controller.planner.left_hand_joints
+    planner.right_hand_joints: controller.planner.right_hand_joints
+    command.smpl_pose: command.wire.smpl_pose
+    command.smpl_joints: command.wire.smpl_joints
+    command.body_quat_w: command.wire.body_quat_w
+    command.joint_pos: command.wire.joint_pos
+    command.joint_vel: command.wire.joint_vel
+    command.frame_index: command.wire.frame_index
+    command.pico_dt: command.wire.pico_dt
+    command.pico_fps: command.wire.pico_fps
+    command.timestamp_monotonic: command.wire.timestamp_monotonic
+    command.heading_increment: command.wire.heading_increment
+    command.toggle_data_collection: command.wire.toggle_data_collection
+    command.toggle_data_abort: command.wire.toggle_data_abort
+    command.vr_position: command.wire.vr_position
+    command.vr_orientation: command.wire.vr_orientation
+    details.smpl_pose: teleop.details.smpl_pose
+    details.smpl_joints: teleop.details.smpl_joints
+    details.body_quat_w: teleop.details.body_quat_w
+    details.joint_pos: teleop.details.joint_pos
+    details.left_trigger: teleop.details.left_trigger
+    details.right_trigger: teleop.details.right_trigger
+    details.left_grip: teleop.details.left_grip
+    details.right_grip: teleop.details.right_grip
+    details.timestamp_realtime: teleop.details.timestamp_realtime
+    details.left_hand_joints: teleop.details.left_hand_joints
+    details.right_hand_joints: teleop.details.right_hand_joints
+    details.neck_pose: teleop.details.neck_pose
+    details.body_poses_np: teleop.details.body_poses_np
+  options:
+    skeleton: ${SKELETON_PATH}
+    robot_urdf: ${ROBOT_URDF_PATH}
+    # Configure physical actuators; the sender pads to seven gear_sonic_deploy wire channels.
+    hands:
+      left:
+        open: [1., 1., 1., 1., 1., 1.]
+        closed: [0., 0., 0., 0., 0., 0.]
+        fixed: {"5": 0.0}
+      right:
+        open: [1., 1., 1., 1., 1., 1.]
+        closed: [0., 0., 0., 0., 0., 0.]
+        fixed: {"5": 0.0}
+    interpolate: true
+    history_size: 5
+    history_start: wait
+    history_frame_indices: true
+    planner_hz: 20
+    action_period_ns: 20000000
+- id: sender
+  type: omega_real.transports.zmq.ZmqSender
+  inputs:
+    pose.smpl_pose: command.wire.smpl_pose
+    pose.smpl_joints: command.wire.smpl_joints
+    pose.body_quat_w: command.wire.body_quat_w
+    pose.joint_pos: command.wire.joint_pos
+    pose.joint_vel: command.wire.joint_vel
+    pose.frame_index: command.wire.frame_index
+    pose.neck_pose: teleop.details.neck_pose
+    pose.left_trigger: teleop.details.left_trigger
+    pose.right_trigger: teleop.details.right_trigger
+    pose.left_grip: teleop.details.left_grip
+    pose.right_grip: teleop.details.right_grip
+    pose.pico_dt: command.wire.pico_dt
+    pose.pico_fps: command.wire.pico_fps
+    pose.timestamp_realtime: teleop.details.timestamp_realtime
+    pose.timestamp_monotonic: command.wire.timestamp_monotonic
+    pose.heading_increment: command.wire.heading_increment
+    pose.toggle_data_collection: command.wire.toggle_data_collection
+    pose.toggle_data_abort: command.wire.toggle_data_abort
+    pose.vr_position: command.wire.vr_position
+    pose.vr_orientation: command.wire.vr_orientation
+    pose.left_hand_joints: teleop.details.left_hand_joints
+    pose.right_hand_joints: teleop.details.right_hand_joints
+    planner.mode: controller.planner.mode
+    planner.movement: controller.planner.movement
+    planner.facing: controller.planner.facing
+    planner.speed: controller.planner.speed
+    planner.height: controller.planner.height
+    planner.upper_body_position: controller.planner.upper_body_position
+    planner.vr_position: controller.planner.vr_position
+    planner.vr_orientation: controller.planner.vr_orientation
+    planner.left_hand_joints: controller.planner.left_hand_joints
+    planner.right_hand_joints: controller.planner.right_hand_joints
+    command.start: lifecycle.command.start
+    command.stop: lifecycle.command.stop
+    command.planner: lifecycle.command.planner
+  options:
+    endpoint: ${COMMAND_ENDPOINT}
+    bind: true
+    format: sonic_json
+    topics:
+      pose:
+        version: 3
+      planner:
+        version: 1
+        optional_inputs:
+        - upper_body_position
+        - vr_position
+        - vr_orientation
+        - left_hand_joints
+        - right_hand_joints
+      command:
+        version: 1
+- id: recorder
+  type: omega_real.recording.recorder.Recorder
+  events:
+  - {on: record_toggle, sources: [lifecycle], action: record_toggle}
+  - {on: record_stop, sources: [lifecycle], action: record_stop}
+  - {on: record_abort, sources: [lifecycle], action: record_abort}
+  rate_hz: 30
+  inputs:
+    joints: g1_debug.body_q
+    image: camera.rgb
+    exo_image: camera.exo_rgb
+    exo_depth: camera.exo_depth
+    latent: g1_debug.token_state
+    angular_velocity: g1_debug.base_ang_vel
+    linear_acceleration: g1_debug.base_lin_acc
+    left_hand: g1_debug.left_hand_q
+    right_hand: g1_debug.right_hand_q
+    orientation: g1_debug.base_quat
+    details.smpl_pose: teleop.details.smpl_pose
+    details.smpl_joints: teleop.details.smpl_joints
+    details.body_quat_w: teleop.details.body_quat_w
+    details.joint_pos: teleop.details.joint_pos
+    details.left_trigger: teleop.details.left_trigger
+    details.right_trigger: teleop.details.right_trigger
+    details.left_grip: teleop.details.left_grip
+    details.right_grip: teleop.details.right_grip
+    details.timestamp_realtime: teleop.details.timestamp_realtime
+    details.left_hand_joints: teleop.details.left_hand_joints
+    details.right_hand_joints: teleop.details.right_hand_joints
+    details.neck_pose: teleop.details.neck_pose
+    details.body_poses_np: teleop.details.body_poses_np
+  options:
+    root: artifacts/robot
+    metadata:
+      embodiment: g1_inspire
+      controller: sonic
+      instruction: ${INSTRUCTION}
+      state_hand_scale: 1.0
+      training_image_crop: [0, 0, 640, 360]
+      depth_units: millimeter
+    auto_start: false
+    abort: discard
+    sampling: latest
+    layout:
+      images:
+        exo_depth: exo_depth
+      hdf5:
+        action:
+          smpl_pose: details.smpl_pose
+          smpl_joints: details.smpl_joints
+          body_quat_w: details.body_quat_w
+          joint_pos: details.joint_pos
+          left_trigger: details.left_trigger
+          right_trigger: details.right_trigger
+          left_grip: details.left_grip
+          right_grip: details.right_grip
+          timestamp_realtime: details.timestamp_realtime
+          left_hand_joints: details.left_hand_joints
+          right_hand_joints: details.right_hand_joints
+          neck_pose: details.neck_pose
+          body_poses_np: details.body_poses_np
+        state:
+          joints: joints
+          angular_velocity: angular_velocity
+          linear_acceleration: linear_acceleration
+          left_hand: left_hand
+          right_hand: right_hand
+          orientation: orientation
+        sonic:
+          token_state: latent
+      videos:
+        ego: image
+        exo: exo_image
+execution_groups:
+- id: teleop
+  rate_hz: 50
+  trigger: operator.body
+  modules:
+  - lifecycle
+  - sonic
+  - sender

@@ -1,0 +1,115 @@
+model:
+  model_name_or_path: ${VLM_PATH}
+  text_model: ${T5_PATH}
+  local_files_only: true
+  wan_checkpoint: ${WAN_PATH}
+  action_dim: 66
+  action_chunk_size: 30
+  ac_vjepa_image_size: 256
+  ac_vjepa_state_dim: 45
+  ac_vjepa_use_state: false
+  tune_vlm: false
+  ac_vjepa_freeze_frame_encoder: true
+  rtc: true
+  max_delay: 8
+  ac_vjepa_force_null_state: true
+  ac_vjepa_encoder_ckpt: ${VJEPA_PATH}
+  ac_vjepa_encoder_hidden_dim: 1408
+  ac_vjepa_encoder_depth: 40
+  ac_vjepa_encoder_heads: 16
+  ac_vjepa_encoder_mlp_ratio: 4.363636363636363
+  ac_vjepa_encoder_use_rope: true
+  ac_vjepa_hidden_dim: 768
+  ac_vjepa_depth: 12
+  ac_vjepa_num_heads: 16
+  ac_vjepa_load_predictor_from_ckpt: false
+  ac_vjepa_state_dropout_prob: 0.1
+data:
+  factory: omega.data.dataset:dataset
+  options:
+    reader:
+      factory: omega.data.wholebody.finetune:FinetuneDataset
+      options:
+        data_root: ${DATA_ROOT}
+        action_chunk_size: 30
+        text_model: ${T5_PATH}
+        upsample_rate: 1
+    processor:
+      pretrained_model_name_or_path: ${VLM_PATH}
+      local_files_only: true
+    transforms:
+    - factory: omega.data.transforms:WholeBodyRepackTransform
+      options:
+        action_chunk_size: 30
+        pad_action_dim: 66
+        pad_state_dim: 66
+    - factory: omega.data.normalization:NormalizeFields
+      options:
+        action_dim: 66
+        action:
+          mode: none
+    - factory: omega.data.transforms:WAMModelTransform
+      options:
+        include_state: false
+        resize:
+          size:
+          - 270
+          - 480
+        center_crop:
+          size:
+          - 270
+          - 480
+        jepa_resize:
+          size:
+          - 256
+          - 256
+        jepa_center_crop:
+          size:
+          - 256
+          - 256
+collator:
+  factory: omega.data.collate:PaddedCollatorForTogether
+  options:
+    model_max_length: 4096
+    pad_token_id: 151643
+    t5_pad_token_id: 0
+train:
+  batch_size: 32
+  max_steps: 80000
+  workers: 16
+  mixed_precision: bf16
+  learning_rate: 0.0001
+  save_every: 100
+  log_every: 100
+  output: artifacts/finetune
+  seed: 1039
+  rng_mode: legacy
+  exact_resume: false
+  drop_last: true
+  persistent_workers: true
+  keep_frozen_eval: false
+  strict_predictor_only: true
+  betas:
+  - 0.95
+  - 0.999
+  weight_decay: 1.0e-06
+  warmup_steps: 1000
+  schedule: cosine
+  keep_checkpoints: 5
+  validation_every: 0
+  eval_batches: 20
+artifact:
+  preprocessing:
+    image_field: image
+    history_size: 1
+    precision: bfloat16
+    vlm_size:
+    - 270
+    - 480
+    lowercase_instruction: true
+  normalization:
+    action:
+      mode: none
+predictor_init:
+  path: ${PREDICTOR_INIT_PATH}
+  key: predictor

@@ -1,0 +1,66 @@
+# Qwen + FAST action-token pretraining (original scripts/train/psi0/pretrain_wholebody_vlm_single_gpu.sh).
+stage: vlm_pretrain
+model:
+  model_name_or_path: ${VLM_PATH}
+  action_tokenizer: ${FAST_TOKENIZER_PATH}
+  action_bins: 2048
+  action_dim: 75
+  action_chunk_size: 1
+  model_max_length: 8192
+  local_files_only: true
+  attn_implementation: flash_attention_2
+  tune_mm_llm: true
+  tune_mm_vision: false
+  tune_mm_mlp: true
+  gradient_checkpointing: true
+  mm_projector_lr: 0.00001
+  vision_tower_lr: 0.00001
+  weight_decay: 0.01
+data:
+  factory: omega.data.dataset:dataset
+  options:
+    reader:
+      factory: omega.data.wholebody.vlm_pretrain:VLMPretrainDataset
+      options:
+        data_root: ${DATA_ROOT}
+        chunk_size: 1
+        upsample_rate: 3
+        img_history_size: 1
+        use_delta_actions: false
+    transforms:
+    - factory: omega.data.transforms:WholeBodyRepackTransform
+      options:
+        action_chunk_size: 1
+    - factory: omega.data.normalization:ActionStateTransform
+      options:
+        stat_path: ${ACTION_STATS_PATH}
+        stat_action_key: wam_smpl
+        stat_state_key: wam_smpl
+        action_norm_type: bounds_q99
+        normalize_state: true
+    - factory: omega.data.transforms:VLMModelTransform
+      options:
+        color_jitter: {}
+        resize:
+          size: [270, 480]
+train:
+  batch_size: 16
+  max_steps: 1000000
+  workers: 8
+  mixed_precision: bf16
+  learning_rate: 0.00002
+  save_every: 5000
+  log_every: 100
+  output: artifacts/vlm_pretrain
+  seed: 1039
+  rng_mode: legacy
+  exact_resume: false
+  drop_last: true
+  persistent_workers: true
+  keep_frozen_eval: false
+  betas: [0.9, 0.999]
+  weight_decay: 0.0
+  eps: 0.00000001
+  warmup_steps: 0
+  schedule: constant
+  keep_checkpoints: 5

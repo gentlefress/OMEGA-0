@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omega-zero"
+version = "0.1.0"
+description = "Humanoid policy learning and reusable robot workflows"
+requires-python = ">=3.10"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "src/models/WAN_LICENSE.txt"]
+dependencies = ["numpy>=1.24", "PyYAML>=6", "msgpack>=1"]
+
+[project.optional-dependencies]
+# Rerun 0.23.1 supports the NumPy 1.x environments used by the robot SDKs.
+deploy = ["pyzmq>=25", "h5py>=3.8", "av>=12", "Pillow>=10", "opencv-python-headless>=4.8", "scipy>=1.10", "rerun-sdk==0.23.1"]
+inference = ["torch>=2.5", "torchvision>=0.20", "transformers>=4.57,<5", "safetensors>=0.4", "Pillow>=10", "scipy>=1.10", "torchdiffeq>=0.2", "einops>=0.8", "sentencepiece>=0.2", "qwen-vl-utils>=0.0.14", "pydantic>=2", "opencv-python-headless>=4.8"]
+train = ["omega-zero[inference]", "h5py>=3.8", "av>=12", "accelerate>=1.7", "pydantic>=2", "decord>=0.6", "tqdm>=4", "albumentations>=1.4,<2"]
+
+[project.scripts]
+omega-run = "omega_real.run:main"
+omega-serve = "omega.inference.run:main"
+omega-train = "omega.training.run:main"
+omega-evaluate = "omega.evaluation.run:main"
+
+[tool.setuptools]
+package-dir = {omega = "src", omega_real = "real"}
+packages = ["omega", "omega.models", "omega.models.diffusion", "omega.models.diffusion.diffusion", "omega.models.diffusion.transport", "omega.data", "omega.data.wholebody", "omega.training", "omega.inference", "omega.evaluation", "omega_real", "omega_real.configs", "omega_real.core", "omega_real.models", "omega_real.policies", "omega_real.sensors", "omega_real.transports", "omega_real.control", "omega_real.transforms", "omega_real.recording"]
+
+[tool.setuptools.package-data]
+omega = ["configs/*.yaml"]
+omega_real = ["configs/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
