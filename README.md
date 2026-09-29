@@ -6,12 +6,29 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2608.06375"><img src="https://img.shields.io/badge/arXiv-2608.06375-b31b1b.svg" alt="arXiv"></a>
   <a href="https://gentlefress.github.io/OMEGA-0_page/"><img src="https://img.shields.io/badge/Project-Page-blue.svg" alt="Project Page"></a>
+  <a href="https://huggingface.co/datasets/keycharon/omega-HOME"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-%CF%89--HOME-yellow.svg" alt="Hugging Face Dataset: ω-HOME"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
+  <a href="https://x.com/Jianfei_AI/status/2086677871960236291?s=20"><img src="https://img.shields.io/badge/Twitter%20%2F%20X-000000.svg" alt="Twitter / X"></a>
+  <a href="https://xhslink.cn/o/11fRT5XexqR"><img src="https://img.shields.io/badge/%E5%B0%8F%E7%BA%A2%E4%B9%A6-FF2442.svg" alt="小红书 / Xiaohongshu"></a>
+  <a href="https://www.linkedin.com/posts/jianfei-yang-55560386_humanoidrobotics-robotics-embodiedai-activity-7492444308520718336-YSDh?utm_source=share&amp;utm_medium=member_desktop&amp;rcm=ACoAAFw0zd8BUbAGtl28gqUhAJW6kfODKtA5wFA"><img src="https://img.shields.io/badge/LinkedIn-0A66C2.svg" alt="LinkedIn"></a>
 </p>
 
 <p align="center">
-  Zhe Li · Zhenzhe Zhang · Yangyang Wei · Wenjie Zhang · Xichen Yuan · Peiyuan Zhi<br>
-  Gen Li · Xinying Guo · Fengjie Gao · Jianfei Yang · Shanghang Zhang
+  Zhe Li<sup>1,3*†</sup> · Zhenzhe Zhang<sup>2,3*</sup> · Yangyang Wei<sup>3*</sup> · Wenjie Zhang<sup>4*</sup> · Xichen Yuan<sup>1*</sup><br>
+  Peiyuan Zhi<sup>3</sup> · Gen Li<sup>1</sup> · Xinying Guo<sup>1</sup> · Fengjie Gao<sup>1</sup> · Jianfei Yang<sup>1♣</sup> · Shanghang Zhang<sup>2♣</sup>
+</p>
+
+<p align="center">
+  <sup>1</sup> MARS Lab, Nanyang Technological University (NTU)<br>
+  <sup>2</sup> Peking University · <sup>3</sup> Beijing Academy of Artificial Intelligence (BAAI)<br>
+  <sup>4</sup> The Hong Kong University of Science and Technology (Guangzhou)<br>
+  <strong>*</strong> Equal contribution · <strong>†</strong> Project lead · <strong>♣</strong> Corresponding authors
+</p>
+
+<p align="center">
+  <img src="https://gentlefress.github.io/OMEGA-0_page/assets/logo/mars_lab_logo.png" alt="MARS Lab" height="80" align="middle">
+  &nbsp;&nbsp;
+  <img src="https://gentlefress.github.io/OMEGA-0_page/assets/logo/hmi_logo.png" alt="HMI Lab" height="155" align="middle">
 </p>
 
 <p align="center">
@@ -23,7 +40,9 @@
   <a href="https://gentlefress.github.io/OMEGA-0_page/assets/videos/teaser.mp4">Watch the teaser</a>
 </p>
 
-## Introduction
+<a id="introduction"></a>
+
+## 🌟 Introduction
 
 **ω-0 (OMEGA-0)** is a latent predictive world action model for concurrent humanoid
 locomotion and manipulation. It maps language instructions, visual observations,
@@ -37,13 +56,43 @@ robot operation, and the two training stages.
 OMEGA-0 is released under the [MIT License](LICENSE). Third-party code and files
 with their own license headers remain subject to their original licenses.
 
-## Installation
+## 🎬 Demos
 
-### Requirements
+[▶ Watch the full introduction](https://gentlefress.github.io/OMEGA-0_page/assets/videos/intro.mp4)
 
-- Linux with Python 3.10 or later. The setup below uses Python 3.10.
-- An NVIDIA GPU with CUDA support for training and inference.
-- The model checkpoints, tokenizers, and datasets specified in [Training](#training).
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Pick Garbage</strong><br>
+      <a href="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/pick_garbage/exo.mp4"><img src="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/pick_garbage/exo.jpg" alt="Pick Garbage demo — click to watch" width="100%"></a><br>
+    </td>
+    <td align="center" width="50%">
+      <strong>Retrieve From Fridge</strong><br>
+      <a href="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/retrieve_from_upper_fridge/exo.mp4"><img src="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/retrieve_from_upper_fridge/exo.jpg" alt="Retrieve From Upper Fridge demo — click to watch" width="100%"></a><br>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Pick Clothes From Washing Machine</strong><br>
+      <a href="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/pick_clothes_from_washing_machine/exo.mp4"><img src="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/pick_clothes_from_washing_machine/exo.jpg" alt="Pick Clothes From Washing Machine demo — click to watch" width="100%"></a><br>
+    </td>
+    <td align="center" width="50%">
+      <strong>Clean Bed</strong><br>
+      <a href="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/clean_bed/exo.mp4"><img src="https://gentlefress.github.io/OMEGA-0_page/assets/videos/demo_lib/clean_bed/exo.jpg" alt="Clean Bed demo — click to watch" width="100%"></a><br>
+    </td>
+  </tr>
+</table>
+
+## ✅ TODO
+
+- [x] Provide training and inference code.
+- [x] Provide teleoperation, recording, and robot deployment instructions.
+- [x] Release the [ω-HOME dataset](https://huggingface.co/datasets/keycharon/omega-HOME) on Hugging Face.
+- [ ] Publish pretrained checkpoints.
+
+<a id="installation"></a>
+
+## 📦 Installation
 
 ### Python Environment
 
@@ -69,7 +118,9 @@ python -c "import omega, torch; print('PyTorch:', torch.__version__); print('CUD
 Activate this environment in each workstation terminal used below. Run Python
 commands from the repository root unless another directory is specified.
 
-## Hardware Setup
+<a id="hardware-setup"></a>
+
+## 🛠️ Hardware Setup
 
 The supplied configurations target a Unitree G1 with Inspire hands and a
 ZED Mini egocentric camera. Teleoperation uses Pico body tracking through
@@ -195,7 +246,9 @@ workstation address:
 Replace `eth0` and `192.168.123.100` with your interface and workstation address.
 Use `--zmq-host 127.0.0.1` when SONIC and the Python client run on the same host.
 
-## Data Collection
+<a id="data-collection"></a>
+
+## 🎥 Data Collection
 
 Start the robot services and Pico tracking, then activate the workstation
 environment. Set the variables in [Network Connections](#network-connections)
@@ -231,7 +284,9 @@ Each completed episode contains `state_action.hdf5`, `ego.mp4`, and
 optional; depth images are stored separately from HDF5. Prepare these recordings
 in the dataset layout described in [Training](#training) before fine-tuning.
 
-## Deployment
+<a id="deployment"></a>
+
+## 🤖 Deployment
 
 Start the robot services, activate the workstation environment, and set the
 variables in [Network Connections](#network-connections). Stop the collection
@@ -296,7 +351,9 @@ again to enable model commands.
 Each module reports its current state. Use `--status-interval` to adjust the
 reporting interval.
 
-## Training
+<a id="training"></a>
+
+## 🧠 Training
 
 The supplied training recipes cover action-token pretraining and world action
 model (WAM) fine-tuning. Both stages use a shared Accelerate training loop with checkpoint
@@ -440,14 +497,18 @@ accumulation settings. Exact mid-epoch reproduction of data transformations
 requires `train.workers: 0` and `train.exact_resume: true`. The provided
 configurations use multiple data-loading workers and set `exact_resume: false`.
 
-## Acknowledgements
+<a id="acknowledgements"></a>
+
+## 🙏 Acknowledgements
 
 We would like to acknowledge the following projects from which parts of the code in this repo are derived from:
 
 - [Ψ₀](https://github.com/physical-superintelligence-lab/Psi0)
 - [GR00T-WholeBodyControl](https://github.com/NVlabs/GR00T-WholeBodyControl)
 
-## Citation
+<a id="citation"></a>
+
+## 📚 Citation
 
 If you use OMEGA-0 in your research, please cite
 [OMEGA-0](https://arxiv.org/abs/2608.06375):
