@@ -17,7 +17,19 @@
   Zhe Li<sup>1,3*†</sup> · Zhenzhe Zhang<sup>2,3*</sup> · Yangyang Wei<sup>3*</sup> · Wenjie Zhang<sup>4*</sup> · Xichen Yuan<sup>1*</sup><br>
   Peiyuan Zhi<sup>3</sup> · Gen Li<sup>1</sup> · Xinying Guo<sup>1</sup> · Fengjie Gao<sup>1</sup> · Jianfei Yang<sup>1♣</sup> · Shanghang Zhang<sup>2♣</sup>
 </p>
-
+<p align="center">
+  <a href="https://gentlefress.github.io/">Zhe Li</a><sup>1,3*†</sup> · 
+  Zhenzhe Zhang</a><sup>2,3*</sup> · 
+  <a href="https://scholar.google.com/citations?user=2K641iEAAAAJ&hl=zh-CN">Yangyang Wei</a><sup>3*</sup> · 
+  Wenjie Zhang</a><sup>4*</sup> · 
+  Xichen Yuan</a><sup>1*</sup><br>
+  Peiyuan Zhi</a><sup>3</sup> · 
+  <a href="https://www.genli.top/">Gen Li</a><sup>1</sup> · 
+  <a href="https://scholar.google.com/citations?user=KWXEabIAAAAJ&hl=en">Xinying Guo</a><sup>1</sup> · 
+  Fengjie Gao</a><sup>1</sup> · 
+  <a href="https://marsyang.site/">Jianfei Yang</a><sup>1♣</sup> · 
+  <a href="https://cs.pku.edu.cn/info/1233/2060.htm">Shanghang Zhang</a><sup>2♣</sup>
+</p>
 <p align="center">
   <sup>1</sup> MARS Lab, Nanyang Technological University<br>
   <sup>2</sup> Peking University · <sup>3</sup> Beijing Academy of Artificial Intelligence<br>
