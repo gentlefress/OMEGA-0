@@ -37,7 +37,7 @@
   </a>
 </p>
 <p align="center">
-  <a href="https://gentlefress.github.io/OMEGA-0_page/assets/videos/teaser.mp4">Watch the teaser</a>
+  <a href="https://gentlefress.github.io/OMEGA-0_page/assets/videos/teaser.mp4">Watch the teaser video</a>
 </p>
 
 <a id="introduction"></a>
