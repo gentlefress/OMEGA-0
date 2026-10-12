@@ -6,6 +6,9 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2608.06375"><img src="https://img.shields.io/badge/arXiv-2608.06375-b31b1b.svg" alt="arXiv"></a>
   <a href="https://gentlefress.github.io/OMEGA-0_page/"><img src="https://img.shields.io/badge/Project-Page-blue.svg" alt="Project Page"></a>
+  <a href="https://huggingface.co/keycharon/Omega-zero">
+  <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Checkpoint-%CF%89--0-yellow.svg"
+       alt="Hugging Face Checkpoint: ω-0"></a>
   <a href="https://huggingface.co/datasets/keycharon/omega-HOME"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-%CF%89--HOME-yellow.svg" alt="Hugging Face Dataset: ω-HOME"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
   <a href="https://x.com/Jianfei_AI/status/2086677871960236291?s=20"><img src="https://img.shields.io/badge/Twitter%20%2F%20X-000000.svg" alt="Twitter / X"></a>
@@ -96,7 +99,7 @@ with their own license headers remain subject to their original licenses.
 - [x] Provide training and inference code.
 - [x] Provide teleoperation, recording, and robot deployment instructions.
 - [x] Release the [ω-HOME dataset](https://huggingface.co/datasets/keycharon/omega-HOME) on Hugging Face.
-- [ ] Publish pretrained checkpoints.
+- [x] Publish pretrained checkpoints.
 
 <a id="installation"></a>
 
